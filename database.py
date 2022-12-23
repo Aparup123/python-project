@@ -1,4 +1,5 @@
 import csv
+import matplotlib.pyplot as plt
 fields=["Student ID", "Name", "Class Roll Number", "Batch Name"]
 c=None
 
@@ -101,6 +102,51 @@ def addCourse():
         with open ("course.csv","a") as fhand:
             csvWriter=csv.writer(fhand)
             csvWriter.writerow(cdetails)
+def viewCourse():
+    with open ("course.csv","r") as fhand:
+        csvReader=csv.reader(fhand)
+        print("--------------------------------------------------------------------------------------------")
+        for row in csvReader:
+            print(row[0]+" "*(12-len(row[0]))+row[1]+" "*(30-len(row[1]))+str(row[2]))
+        print("--------------------------------------------------------------------------------------------")
+def viewPerformance():
+    courseId=input("Enter the course id: ")
+    reqDic={}
+    with open("course.csv","r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(row[0]==courseId):
+                reqDic=eval(row[2])
+        with open("student.csv","r") as fhand:
+            csvReader=csv.reader(fhand)
+            print("--------------------------------------------------------------------------------------------")
+            print("NAME                          ROLL        MARKS")
+            for key,value in reqDic.items():
+                for row in csvReader:
+                    # print(row)
+                    # print(key)
+                    if(key==row[0]):
+                        print(row[1]+" "*(30-len(row[1]))+row[2]+" "*(12-len(row[2]))+value)
+                        break
+            print("--------------------------------------------------------------------------------------------")       
+def histogram():
+    courseId=input("Enter the course id: ")
+    marksList=[]
+    marksDict={}
+    with open("course.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+          if(row[0]==courseId):
+                marksDict=eval(row[2])
+                for key,value in marksDict.items():
+                    marksList.append(int(value))
+                print(marksList)
+                plt.hist(marksList)
+                plt.xlabel("Grades")
+                plt.ylabel("Number of students")
+                plt.show()
+            
+    
 
 def courseDb():
     choice=0
@@ -110,11 +156,11 @@ def courseDb():
             case 1:
                 addCourse()
             case 2:
-                updateStudent()
+                viewPerformance()
             case 3:
-                removeStudent()
+                histogram()
             case 4:
-                viewStudent()
+                viewCourse()
 
 
 #Database choice

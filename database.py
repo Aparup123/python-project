@@ -180,8 +180,14 @@ def addBatch():
     dname=input("Department name: ")
     courseLength=int(input("Enter the number of courses in this batch: "))
     courseList=[input("Enter courses in this batch: ") for i in range(courseLength)]
-    studentLength=int(input("Enter number of students in the batch: "))
-    studentList=[input("Enter student id: ") for i in range(studentLength)]
+    studentList=[]
+    with open ("student.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(row[3]==bid):
+                studentList.append(row[0])
+    # studentLength=int(input("Enter number of students in the batch: "))
+    # studentList=[input("Enter student id: ") for i in range(studentLength)]
     bdetails=[bid,bname,dname,courseList,studentList]
     with open ("batch.csv","a") as fhand:
         csvWriter=csv.writer(fhand)
@@ -193,6 +199,21 @@ def viewBatch():
         for row in csvReader:
             print(row[0]+" "*(12-len(row[0]))+row[1]+" "*(20-len(row[1]))+str(row[2])+" "*(20-len(row[2]))+str(row[3])+" "*(30-len(str(row[3])))+str(row[4]))
         print("--------------------------------------------------------------------------------------------")
+def viewStudentList():
+    batchId=input("Enter batchId: ")
+    with open ("batch.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(row[0]==batchId):
+                studentList=eval(row[4])
+                for element in studentList:
+                    print(element)
+                    with open ("student.csv", "r") as fhand:
+                        csvReader=csv.reader(fhand)
+                        for row in csvReader:
+                            if(row[0]==element):
+                                print(row[0]+" "*(12-len(row[0]))+row[1]+" "*(20-len(row[1]))+str(row[2])+" "*(20-len(row[2]))+str(row[3]))
+
 def batchDb():
     choice=0
     while(choice!=5):
@@ -201,7 +222,7 @@ def batchDb():
             case 1:
                 addBatch()
             case 2:
-                viewPerformance()
+                viewStudentList()
             case 3:
                 histogram()
             case 4:

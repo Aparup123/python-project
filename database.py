@@ -162,7 +162,50 @@ def courseDb():
             case 4:
                 viewCourse()
 
-
+#BATCH DATABASE
+def addBatch():
+    batchField=["Batch ID","Batch Name","Department Name", "List of Courses", "list of students"]
+    with open ("batch.csv", "r") as fhand:
+        c=fhand.read()
+        print(c)
+    if c=="":
+        with open ("batch.csv", "a") as fhand:
+            csvWriter=csv.writer(fhand)
+            # csvReader=csv.reader(fhand)
+            csvWriter.writerow(batchField)
+    
+    print("fdfs")
+    bid=input("Batch ID: ")
+    bname=input("Batch name: ")
+    dname=input("Department name: ")
+    courseLength=int(input("Enter the number of courses in this batch: "))
+    courseList=[input("Enter courses in this batch: ") for i in range(courseLength)]
+    studentLength=int(input("Enter number of students in the batch: "))
+    studentList=[input("Enter student id: ") for i in range(studentLength)]
+    bdetails=[bid,bname,dname,courseList,studentList]
+    with open ("batch.csv","a") as fhand:
+        csvWriter=csv.writer(fhand)
+        csvWriter.writerow(bdetails)
+def viewBatch():
+    with open ("batch.csv","r") as fhand:
+        csvReader=csv.reader(fhand)
+        print("--------------------------------------------------------------------------------------------")
+        for row in csvReader:
+            print(row[0]+" "*(12-len(row[0]))+row[1]+" "*(20-len(row[1]))+str(row[2])+" "*(20-len(row[2]))+str(row[3])+" "*(30-len(str(row[3])))+str(row[4]))
+        print("--------------------------------------------------------------------------------------------")
+def batchDb():
+    choice=0
+    while(choice!=5):
+        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW 5)DONE!"))
+        match choice:
+            case 1:
+                addBatch()
+            case 2:
+                viewPerformance()
+            case 3:
+                histogram()
+            case 4:
+                viewBatch()
 #Database choice
 def choice():
     choice=0
@@ -174,7 +217,7 @@ def choice():
             case 2:
                 courseDb()
             case 3:
-                removeStudent()
+                batchDb()
             case 4:
                 viewStudent()
 choice()

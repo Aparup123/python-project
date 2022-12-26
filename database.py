@@ -261,12 +261,46 @@ def viewBatchPerformance():
                     #     csvReader=csv.reader(fhand)
                     #     for row in csvReader:
                     #         if(row[0]==e):
-                                
-
+def pieChart():
+    value=[]
+    label=[]
+    batchId=input("Enter the batch ID")
+    with open ("batch.csv","r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(row[0]==batchId):
+                studetList=eval(row[4])
+                for element in studetList:
+                    with open("course.csv", "r") as fhandCourse , open("student.csv", "r") as fhandStudent:
+                        csvReaderStudent=csv.reader(fhandStudent)
+                        roll=0
+                        name=""
+                        for i in csvReaderStudent:
+                            if(i[0]==element):
+                                name=i[1]
+                                roll=i[2]
+                        csvReader=csv.reader(fhandCourse)
+                        count=0
+                        tmarks=0
+                        marks=0
+                        marksDict={}
+                        for row in csvReader:
+                            if(row[2]!="marks"):
+                                marksDict=eval(row[2])
+                                if element in marksDict.keys():
+                                    tmarks=int(marksDict[element])+tmarks
+                                    count=count+1
+                        if count!=0:
+                            marks=tmarks/count
+                            value.append(marks)
+                            label.append(name)
+                            # print(roll, name, marks,"%" )                                
+    plt.pie(value, labels=label )
+    plt.show()
 def batchDb():
     choice=0
-    while(choice!=6):
-        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW PERFORMANCE 5)VIEW DB 6)DONE!"))
+    while(choice!=7):
+        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW PERFORMANCE 5)Pie chart performance 6)VIEW DB 7)DONE!"))
         match choice:
             case 1:
                 addBatch()
@@ -277,6 +311,49 @@ def batchDb():
             case 4:
                 viewBatchPerformance()
             case 5:
+                pieChart()
+            case 6:
+                viewBatch()
+def addDepartment():
+    batchField=["Batch ID","Batch Name","Department Name", "List of Courses", "list of students"]
+    with open ("department.csv", "r") as fhand:
+        c=fhand.read()
+        print(c)
+    if c=="":
+        with open ("department.csv", "a") as fhand:
+            csvWriter=csv.writer(fhand)
+            # csvReader=csv.reader(fhand)
+            csvWriter.writerow(batchField)
+    
+    print("fdfs")
+    did=input("Department ID: ")
+    dname=input("Department name: ")
+    batchList=[]   
+    with open ("batch.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(row[2]==did):
+                batchList.append(row[0])
+    ddetails=[did,dname,batchList]
+    with open ("department.csv","a") as fhand:
+        csvWriter=csv.writer(fhand)
+        csvWriter.writerow(ddetails)
+def departmentDb():
+    choice=0
+    while(choice!=6):
+        choice=int(input("Enter 1)CREATE A NEW DEPARTMENT, 2)VIEW BATCHES IN A DEPARTMENT, 3)VIEW AVERAGE PERFORMANCE IN OF ALL BATCHES IN A DEPARTMENT, 4)LINE GRAPH 5)VIEW DB 6)DONE!"))
+        match choice:
+            case 1:
+                addDepartment()
+            case 2:
+                viewStudentList()
+            case 3:
+                viewCourseList()
+            case 4:
+                viewBatchPerformance()
+            case 5:
+                pieChart()
+            case 6:
                 viewBatch()
 #Database choice
 def choice():
@@ -291,5 +368,5 @@ def choice():
             case 3:
                 batchDb()
             case 4:
-                viewStudent()
+                departmentDb()
 choice()

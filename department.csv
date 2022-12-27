@@ -1,4 +1,5 @@
 Department ID,Department Name,Batch List
-CSE,Computer Science and Engineering,['CSE22']
-ECE,Electronics And Communication Engineering,['ECE22']
-EE,Electrical Engineering,[]
+CSE,Computer Science and Engineering,"['CSE22']"
+ECE,Electronics And Communication Engineering,"['ECE22','CSE22']"
+EE,Electrical Engineering,"[]"
+ME,Mechanical Engineering,"['ME22']"

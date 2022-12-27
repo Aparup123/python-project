@@ -1,5 +1,6 @@
 import csv
 import subprocess
+import numpy as np
 import sys
 try:
     import matplotlib.pyplot as plt
@@ -340,7 +341,7 @@ def addDepartment():
         for row in csvReader:
             if(row[2]==did):
                 batchList.append(row[0])
-    ddetails=[did,dname,batchList]
+    ddetails=[did,dname,str(batchList)]
     with open ("department.csv","a") as fhand:
         csvWriter=csv.writer(fhand)
         csvWriter.writerow(ddetails)
@@ -364,7 +365,7 @@ def viewAvgPerformance():
     did=input("Enter the id of the department: ")
     with open ("department.csv", "r") as fhand:
         csvReader=csv.reader(fhand)
-        batchList =[]
+        batchList=[]
         for row in csvReader:
             allBatchMarks=0
             countBatch=0
@@ -405,10 +406,10 @@ def viewAvgPerformance():
                         if(countStudent!=0):
                          allStudentMarks=allStudentMarks/countStudent
                          print(f"{batch} performance {allStudentMarks}")
-                        allBatchMarks=allBatchMarks+allStudentMarks
-                        countBatch=countBatch+1
-                    allBatchMarks=allBatchMarks/countBatch
-                    print("The Depertment performance is: ",allBatchMarks)
+                    #     allBatchMarks=allBatchMarks+allStudentMarks
+                    #     countBatch=countBatch+1
+                    # allBatchMarks=allBatchMarks/countBatch
+                    # print("The Depertment performance is: ",allBatchMarks)
 
                                 # courseList=eval(row[3])
                                 # for course in courseList:
@@ -419,6 +420,61 @@ def viewAvgPerformance():
                                 #             if(row[0]==course):
                                 #                 marksDict=eval(row[2])
                                 #                 for item in marksDict.items():
+def linePlot():
+    plotValue=[]
+    plotLabel=[]
+    did = input("Enter the id of the department: ")
+    with open("department.csv", "r") as fhand:
+        csvReader = csv.reader(fhand)
+        batchList = []
+        for row in csvReader:
+            allBatchMarks = 0
+            countBatch = 0
+            if (row[0] == did):
+                batchList = eval(row[2])
+                print(batchList)
+                for batch in batchList:
+                    countStudent = 0
+                    allStudentMarks = 0
+                    with open("student.csv", "r") as fhand:
+                        csvReader = csv.reader(fhand)
+                        for row in csvReader:
+                            if (batch == row[3]):
+                                sid = row[0]
+                                print(sid)
+                                marksDict = {}
+                                oneStudentMarks = 0
+                                count = 0
+                                with open("course.csv", "r") as fhand:
+                                    csvReader = csv.reader(fhand)
+                                    for row in csvReader:
+                                        if (row[2] == "marks"):
+                                            print("marks detected")
+                                            continue
+                                        else:
+                                            marksDict = eval(row[2])
+                                            print(marksDict)
+                                            for key, value in marksDict.items():
+                                                if (sid == key):
+                                                    oneStudentMarks = oneStudentMarks + int(value)
+                                                    print(oneStudentMarks)
+                                                    count = count + 1
+                                    if (count != 0):
+                                        oneStudentMarks = oneStudentMarks / count
+                                        print(oneStudentMarks)
+                                allStudentMarks = allStudentMarks + oneStudentMarks
+                                countStudent = countStudent + 1
+                        if (countStudent != 0):
+                            allStudentMarks = allStudentMarks / countStudent
+                            print(f"{batch} performance {allStudentMarks}")
+                            plotValue.append(allStudentMarks)
+                            plotLabel.append(batch)
+    print(plotLabel,plotValue)
+    plt.title("Line Plot(You must have atleast two batches under a dept to get the line plot)")
+    plt.ylabel("Average performance")
+    plt.xlabel("Batches")
+    plt.plot(np.array(plotLabel),np.array(plotValue))
+    plt.show()
 
 
 def departmentDb():
@@ -433,11 +489,12 @@ def departmentDb():
             case 3:
                 viewAvgPerformance()
             case 4:
-                viewBatchPerformance()
+                linePlot()
             case 5:
-                pieChart()
-            case 6:
-                viewBatch()
+                viewDB()
+            
+            
+                
 #Database choice
 def choice():
     choice=0

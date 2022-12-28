@@ -493,8 +493,54 @@ def departmentDb():
             case 5:
                 viewDB()
             
-            
-                
+def addExam():
+    cid=input("Enter the course id to know the performances of all students: ")
+    with open ("course.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if (row[0]==cid):
+                print("EXAMINATION NAME:",row[1])
+                print("STUDENT ID               NAME                      MARKS")
+                marksDict=eval(row[2])
+                for key,value in marksDict.items():
+                    with open ("student.csv", "r") as fhand:
+                        csvReader=csv.reader(fhand)
+                        for row in csvReader:
+                            if(key==row[0]):
+                                print(row[0]+" "*(25-len(row[0]))+row[1]+" "*(26-len(row[1]))+str(value))
+def scatterPlot():
+    # plotValues = []
+    # plotLabels = []
+    # with open("course.csv", "r") as fhand:
+    #     csvReader = csv.reader(fhand)
+    #     for row in csvReader:
+    #         if(row[2]!="marks"):
+    #             marksdict = eval(row[2])
+    #             for key, value in marksdict.items():
+    #                 with open("student.csv", "r") as fhand:
+    #                     csvReader = csv.reader(fhan
+    #                     for row in csvReader:
+    #                         if (key == row[0]):
+    #                             plotValues.append(value)
+    #                             plotLabels.append(row[1])
+    #
+    #     plt.scatter(plotLabels, plotValues)
+    #     plt.show()
+    with open ("batch.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            batch=row[0]
+            with open
+
+def examinationDb():
+    choice = 0
+    while (choice != 3):
+        choice = int(input("Enter 1)KNOW THE PERFORMANCE OF ALL STUDENTS IN A EXAMINATION, 2)SCATTER PLOT, 3)DONE!"))
+        match choice:
+            case 1:
+                addExam()
+            case 2:
+                scatterPlot()
 #Database choice
 def choice():
     choice=0
@@ -509,4 +555,6 @@ def choice():
                 batchDb()
             case 4:
                 departmentDb()
+            case 5:
+                examinationDb()
 choice()

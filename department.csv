@@ -3,3 +3,5 @@ CSE,Computer Science and Engineering,"['CSE22']"
 ECE,Electronics And Communication Engineering,"['ECE22','CSE22']"
 EE,Electrical Engineering,"[]"
 ME,Mechanical Engineering,"['ME22']"
+EEE,ELECTRICAL AND ELECTRONICS ENGINEERING,[]
+CSEAIML,comp science and eng aiml,['CSEAIML22']

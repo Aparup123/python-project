@@ -13,17 +13,14 @@ c=None
 def addStudent():
     with open ("student.csv", "r") as fhand:
         c=fhand.read()
-        print(c)
     if c=="":
         with open ("student.csv", "a") as fhand:
             csvWriter=csv.writer(fhand)
-            csvReader=csv.reader(fhand)
             csvWriter.writerow(fields)
     else:
-        print("fdfs")
         sid=input("STUDENT ID: ")
         sname=input("STUDENT NAME: ")
-        sroll=input("Class ROll Number: ")
+        sroll=input("CLASS ROLL NUMBER: ")
         sbatch=input("BATCH NAME: ")
         sdetails=[sid,sname,sroll,sbatch]
         with open ("student.csv","a") as fhand:
@@ -51,7 +48,7 @@ def removeStudent():
 def updateStudent():
     updateddata=[]
     updateid=input("Enter the id of the student to be updated: ")
-    updateChoice=int(input("1)Update Student Name, 2)Update Student Roll Number, 3)Update Student Batch"))
+    updateChoice=int(input("1)Update student's name, 2)Update student's roll number, 3)Update student's batch"))
     with open ("student.csv","r") as fhandin:
         csvReader=csv.reader(fhandin)
         for row in csvReader:
@@ -72,10 +69,51 @@ def updateStudent():
     with open ("student.csv","w") as fhandout:
         csvWriter=csv.writer(fhandout)
         csvWriter.writerows(updateddata)
+def generateReport():
+    sid=input("Enter the student id: ")
+    print("Enter the marks of the students if the student does not have a subject write NA there(Full marks is 100)")
+    phy=input("Physics: ")
+    bio=input("Biology: ")
+    chem=input("Chemistry: ")
+    math=input("Mathematics: ")
+    elec=input("Basic Electrical Engineering: ")
+    mech=input("Engineering Mechanics: ")
+    comp=input("Computer: ")
+    marksList=[phy,bio,chem,math,elec,mech,comp]
+    with open ("student.csv", "r") as fhand:
+        csvReader=csv.reader(fhand)
+        for row in csvReader:
+            if(sid==row[0]):
+                with open(sid + ".txt", "a") as fhand:
+                    fhand.write(f"REPORT CARD\nSTUDENT ID: {sid} \nSTUDENT NAME: {row[1]}\nMARKS             GRADES           STATUS\n")
+    for item in marksList:
+        stat="PASS"
+        if(item!="NA"):
+            marks = int(item)
+            print(marks)
+            if marks >= 90:
+                grade = "A"
+            elif marks >= 80:
+                grade = "B"
+            elif marks >= 70:
+                grade = "C"
+            elif marks >= 60:
+                grade = "D"
+            elif marks >= 50:
+                grade = "E"
+            elif marks < 40:
+                grade = "F"
+                stat="FAIL"
+            with open(sid+".txt","a") as fhand:
+                fhand.write(str(marks)+" "*(18-len(str(marks)))+grade+" "*(17-len(grade))+stat+"\n")
+    marksList=[eval(i) for i in marksList]
+    overAllPercentage=sum(marksList)/len(marksList)
+    with open(sid + ".txt", "a") as fhand:
+        fhand.write(f"The overall percentage: {overAllPercentage}%")
 def studentDb():
     choice=0
-    while(choice!=5):
-        choice=int(input("Enter 1)CREATE A STUDENT, 2)UPDATE STUDENT DETAILS, 3)REMOVE A STUDENT FROM THE DATABASE, 4)VIEW 5)DONE!"))
+    while(choice!=6):
+        choice=int(input("Enter 1)CREATE A STUDENT, 2)UPDATE STUDENT DETAILS, 3)REMOVE A STUDENT FROM THE DATABASE, 4)GENERATE REPORT CARD OF A STUDENT, 5)VIEW DB 6)BACK! "))
         match choice:
             case 1:
                 addStudent()
@@ -84,6 +122,8 @@ def studentDb():
             case 3:
                 removeStudent()
             case 4:
+                generateReport()
+            case 5:
                 viewStudent()
 
 
@@ -93,18 +133,15 @@ def addCourse():
     courseField=["id","name","marks"]
     with open ("course.csv", "r") as fhand:
         c=fhand.read()
-        print(c)
     if c=="":
         with open ("course.csv", "a") as fhand:
             csvWriter=csv.writer(fhand)
-            csvReader=csv.reader(fhand)
             csvWriter.writerow(courseField)
     else:
-        print("fdfs")
         cid=input("Course ID: ")
         cname=input("Course name: ")
-        marksLength=int(input("Enter the number of student u want to add marks: "))
-        cmarks=dict(input("Enter student id and marks: ").split() for i in range (marksLength))
+        marksLength=int(input("Enter the number of student you want to add marks: "))
+        cmarks=dict(input("Enter student id and marks separated by a space: ").split() for i in range (marksLength))
         cdetails=[cid,cname,cmarks]
         with open ("course.csv","a") as fhand:
             csvWriter=csv.writer(fhand)
@@ -147,8 +184,8 @@ def histogram():
                 marksDict=eval(row[2])
                 for key,value in marksDict.items():
                     marksList.append(int(value))
-                print(marksList)
                 plt.hist(marksList)
+                plt.title("COURSE STATISTICS(HISTOGRAM)")
                 plt.xlabel("Grades")
                 plt.ylabel("Number of students")
                 plt.show()
@@ -158,7 +195,7 @@ def histogram():
 def courseDb():
     choice=0
     while(choice!=5):
-        choice=int(input("Enter 1)CREATE A COURSE, 2)VIEW PERFORMANCE, 3)COURSE STATISTICS, 4)VIEW 5)DONE!"))
+        choice=int(input("Enter 1)CREATE A COURSE, 2)VIEW PERFORMANCE OF ALL STUDENTS IN A COURSE, 3)COURSE STATISTICS(HISTOGRAM), 4)VIEW 5)BACK! "))
         match choice:
             case 1:
                 addCourse()
@@ -174,19 +211,15 @@ def addBatch():
     batchField=["Batch ID","Batch Name","Department Name", "List of Courses", "list of students"]
     with open ("batch.csv", "r") as fhand:
         c=fhand.read()
-        print(c)
     if c=="":
         with open ("batch.csv", "a") as fhand:
             csvWriter=csv.writer(fhand)
-            # csvReader=csv.reader(fhand)
             csvWriter.writerow(batchField)
-    
-    print("fdfs")
-    bid=input("Batch ID: ")
-    bname=input("Batch name: ")
-    dname=input("Department name: ")
+    bid=input("Batch ID(e.g:- ECE22): ")
+    bname=input("Batch name(e.g:- ECE 2022-26): ")
+    dname=input("Department name(e.g:- ECE): ")
     courseLength=int(input("Enter the number of courses in this batch: "))
-    courseList=[input("Enter courses in this batch: ") for i in range(courseLength)]
+    courseList=[input("Enter course ids in this batch(one by one): ") for i in range(courseLength)]
     studentList=[]
     with open ("student.csv", "r") as fhand:
         csvReader=csv.reader(fhand)
@@ -202,10 +235,10 @@ def addBatch():
 def viewBatch():
     with open ("batch.csv","r") as fhand:
         csvReader=csv.reader(fhand)
-        print("--------------------------------------------------------------------------------------------")
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         for row in csvReader:
-            print(row[0]+" "*(12-len(row[0]))+row[1]+" "*(20-len(row[1]))+str(row[2])+" "*(20-len(row[2]))+str(row[3])+" "*(30-len(str(row[3])))+str(row[4]))
-        print("--------------------------------------------------------------------------------------------")
+            print(row[0]+" "*(20-len(row[0]))+row[1]+" "*(25-len(row[1]))+str(row[2])+" "*(25-len(row[2]))+str(row[3])+" "*(40-len(str(row[3])))+str(row[4]))
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
 def viewStudentList():
     batchId=input("Enter batchId: ")
     with open ("batch.csv", "r") as fhand:
@@ -213,13 +246,13 @@ def viewStudentList():
         for row in csvReader:
             if(row[0]==batchId):
                 studentList=eval(row[4])
-                print("Student ID     NAME                          Roll")
+                print("STUDENT ID             NAME                                ROLL")
                 for element in studentList:
                     with open ("student.csv", "r") as fhand:
                         csvReader=csv.reader(fhand)
                         for row in csvReader:
                             if(row[0]==element):
-                                print(row[0]+" "*(15-len(row[0]))+row[1]+" "*(30-len(row[1]))+str(row[2]))
+                                print(row[0]+" "*(23-len(row[0]))+row[1]+" "*(36-len(row[1]))+str(row[2]))
 def viewCourseList():
     batchId=input("Enter batchId: ")
     with open ("batch.csv", "r") as fhand:
@@ -227,7 +260,7 @@ def viewCourseList():
         for row in csvReader:
             if(row[0]==batchId):
                 courseList=eval(row[3])
-                print("Course ID      NAME")
+                print("COURSE ID      NAME")
                 for element in courseList:
                     with open ("course.csv", "r") as fhand:
                         csvReader=csv.reader(fhand)
@@ -235,7 +268,8 @@ def viewCourseList():
                             if(row[0]==element):
                                 print(row[0]+" "*(15-len(row[0]))+row[1])
 def viewBatchPerformance():
-    batchId=input("Enter the batch ID")
+    batchId=input("Enter the batch ID: ")
+    print("ROLL      NAME                              PERCENTAGE OBTAINED")
     with open ("batch.csv","r") as fhand:
         csvReader=csv.reader(fhand)
         for row in csvReader:
@@ -263,7 +297,7 @@ def viewBatchPerformance():
                                     count=count+1
                         if count!=0:
                             marks=tmarks/count
-                            print(roll, name, marks,"%" )
+                            print(roll+" "*(10-len(roll))+name+" "*(34-len(name))+str(marks)+"%" )
                     # with open ("student.csv", "r") as fhand:
                     #     csvReader=csv.reader(fhand)
                     #     for row in csvReader:
@@ -271,7 +305,7 @@ def viewBatchPerformance():
 def pieChart():
     value=[]
     label=[]
-    batchId=input("Enter the batch ID")
+    batchId=input("Enter the batch ID: ")
     with open ("batch.csv","r") as fhand:
         csvReader=csv.reader(fhand)
         for row in csvReader:
@@ -303,11 +337,12 @@ def pieChart():
                             label.append(name)
                             # print(roll, name, marks,"%" )                                
     plt.pie(value, labels=label)
+    plt.title("PERFORMANCE OF STUDENTS(PIE CHART)")
     plt.show()
 def batchDb():
     choice=0
     while(choice!=7):
-        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW PERFORMANCE 5)Pie chart performance 6)VIEW DB 7)DONE!"))
+        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW COMPLETE PERFORMANCE OF ALL STUDENTS IN A BATCH 5)PIE CHART OF PERCENTAGE OF ALL STUDENTS 6)VIEW DB 7)BACK! "))
         match choice:
             case 1:
                 addBatch()
@@ -325,16 +360,12 @@ def addDepartment():
     batchField=["Department ID", "Department Name", "Batch List"]
     with open ("department.csv", "r") as fhand:
         c=fhand.read()
-        print(c)
     if c=="":
         with open ("department.csv", "a") as fhand:
             csvWriter=csv.writer(fhand)
-            # csvReader=csv.reader(fhand)
             csvWriter.writerow(batchField)
-    
-    print("fdfs")
-    did=input("Department ID: ")
-    dname=input("Department name: ")
+    did=input("Department ID(e.g:- ECE): ")
+    dname=input("Department name(full name): ")
     batchList=[]   
     with open ("batch.csv", "r") as fhand:
         csvReader=csv.reader(fhand)
@@ -353,16 +384,17 @@ def viewBatches():
         for row in csvReader:
             if(row[0]==did):
                 batchList=eval(row[2])
-
-    with open("batch.csv","r") as fhand:
-        csvReader=csv.reader(fhand)
         print("Batch ID                     Batch Name")
         for element in batchList:
-            for row in csvReader:
-                if(element==row[0]):
-                    print(row[0]+" "*(29-len(row[0]))+row[1])
+            with open("batch.csv", "r") as fhand:
+                csvReader = csv.reader(fhand)
+                for row in csvReader:
+                    if(row[0]!="Batch ID"):
+                        if(element==row[0]):
+                            print(row[0]+" "*(29-len(row[0]))+row[1])
 def viewAvgPerformance():
     did=input("Enter the id of the department: ")
+    print("BATCH ID               AVERAGE PERFORMANCE")
     with open ("department.csv", "r") as fhand:
         csvReader=csv.reader(fhand)
         batchList=[]
@@ -371,7 +403,6 @@ def viewAvgPerformance():
             countBatch=0
             if(row[0]==did):
                 batchList=eval(row[2])
-                print(batchList)
                 for batch in batchList:
                     countStudent=0
                     allStudentMarks=0
@@ -380,7 +411,6 @@ def viewAvgPerformance():
                         for row in csvReader:
                             if(batch==row[3]):
                                 sid=row[0]
-                                print(sid)
                                 marksDict = {}
                                 oneStudentMarks = 0
                                 count = 0
@@ -388,38 +418,20 @@ def viewAvgPerformance():
                                     csvReader=csv.reader(fhand)
                                     for row in csvReader:
                                         if(row[2]=="marks"):
-                                            print("marks detected")
                                             continue
                                         else:
                                             marksDict=eval(row[2])
-                                            print(marksDict)
                                             for key,value in marksDict.items():
                                                 if(sid==key):
                                                     oneStudentMarks=oneStudentMarks+int(value)
-                                                    print(oneStudentMarks)
                                                     count=count+1
                                     if(count!=0):
                                         oneStudentMarks=oneStudentMarks/count
-                                        print(oneStudentMarks)
                                 allStudentMarks=allStudentMarks+oneStudentMarks
                                 countStudent=countStudent+1
                         if(countStudent!=0):
                          allStudentMarks=allStudentMarks/countStudent
-                         print(f"{batch} performance {allStudentMarks}")
-                    #     allBatchMarks=allBatchMarks+allStudentMarks
-                    #     countBatch=countBatch+1
-                    # allBatchMarks=allBatchMarks/countBatch
-                    # print("The Depertment performance is: ",allBatchMarks)
-
-                                # courseList=eval(row[3])
-                                # for course in courseList:
-                                #     marksDict={}
-                                #     with open("course.csv", "r") as fhand:
-                                #         csvReader=csv.reader(fhand)
-                                #         for row in csvReader:
-                                #             if(row[0]==course):
-                                #                 marksDict=eval(row[2])
-                                #                 for item in marksDict.items():
+                         print(batch+" "*(23-len(batch))+str(allStudentMarks)+"%")
 def linePlot():
     plotValue=[]
     plotLabel=[]
@@ -470,17 +482,23 @@ def linePlot():
                             plotValue.append(allStudentMarks)
                             plotLabel.append(batch)
     print(plotLabel,plotValue)
-    plt.title("Line Plot(You must have atleast two batches under a dept to get the line plot)")
+    plt.title("DEPARTMENT STATISTICS(LINE PLOT)")
     plt.ylabel("Average performance")
     plt.xlabel("Batches")
     plt.plot(np.array(plotLabel),np.array(plotValue))
     plt.show()
-
+def viewDepartment():
+    with open ("department.csv","r") as fhand:
+        csvReader=csv.reader(fhand)
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
+        for row in csvReader:
+            print(row[0]+" "*(20-len(row[0]))+row[1]+" "*(60-len(row[1]))+str(row[2]))
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 def departmentDb():
     choice=0
     while(choice!=6):
-        choice=int(input("Enter 1)CREATE A NEW DEPARTMENT, 2)VIEW BATCHES IN A DEPARTMENT, 3)VIEW AVERAGE PERFORMANCE IN OF ALL BATCHES IN A DEPARTMENT, 4)LINE GRAPH 5)VIEW DB 6)DONE!"))
+        choice=int(input("Enter 1)CREATE A NEW DEPARTMENT, 2)VIEW ALL BATCHES IN A DEPARTMENT, 3)VIEW AVERAGE PERFORMANCE OF ALL BATCHES IN A DEPARTMENT, 4)VIEW DEPERTMENT STATISTICS(LINE PLOT) 5)VIEW DB 6)BACK! "))
         match choice:
             case 1:
                 addDepartment()
@@ -491,7 +509,7 @@ def departmentDb():
             case 4:
                 linePlot()
             case 5:
-                viewDB()
+                viewDepartment()
             
 def addExam():
     cid=input("Enter the course id to know the performances of all students: ")
@@ -509,33 +527,30 @@ def addExam():
                             if(key==row[0]):
                                 print(row[0]+" "*(25-len(row[0]))+row[1]+" "*(26-len(row[1]))+str(value))
 def scatterPlot():
-    # plotValues = []
-    # plotLabels = []
-    # with open("course.csv", "r") as fhand:
-    #     csvReader = csv.reader(fhand)
-    #     for row in csvReader:
-    #         if(row[2]!="marks"):
-    #             marksdict = eval(row[2])
-    #             for key, value in marksdict.items():
-    #                 with open("student.csv", "r") as fhand:
-    #                     csvReader = csv.reader(fhan
-    #                     for row in csvReader:
-    #                         if (key == row[0]):
-    #                             plotValues.append(value)
-    #                             plotLabels.append(row[1])
-    #
-    #     plt.scatter(plotLabels, plotValues)
-    #     plt.show()
-    with open ("batch.csv", "r") as fhand:
-        csvReader=csv.reader(fhand)
+    plotValues = []
+    plotLabels = []
+    with open("course.csv", "r") as fhand:
+        csvReader = csv.reader(fhand)
         for row in csvReader:
-            batch=row[0]
-            with open
+            if(row[2]!="marks"):
+                marksdict = eval(row[2])
+                for key, value in marksdict.items():
+                    with open("student.csv", "r") as fhand:
+                        csvReader = csv.reader(fhand)
+                        for row in csvReader:
+                            if (key == row[0]):
+                                plotValues.append(value)
+                                plotLabels.append(row[3])
 
+        plt.scatter(plotLabels,plotValues)
+        plt.title("SCATTER PLOT")
+        plt.xlabel("Batches")
+        plt.ylabel("Marks")
+        plt.show()
 def examinationDb():
     choice = 0
     while (choice != 3):
-        choice = int(input("Enter 1)KNOW THE PERFORMANCE OF ALL STUDENTS IN A EXAMINATION, 2)SCATTER PLOT, 3)DONE!"))
+        choice = int(input("Enter 1)VIEW THE PERFORMANCE OF ALL STUDENTS IN A EXAMINATION, 2)SCATTER PLOT, 3)BACK! "))
         match choice:
             case 1:
                 addExam()
@@ -545,7 +560,7 @@ def examinationDb():
 def choice():
     choice=0
     while(choice!=6):
-        choice=int(input("Enter 1)STUDENT DB, 2)COURSE DB, 3)BATCH DB, 4)DEPARTMENT DB 5)EXAMINATION DB 6)DONE!"))
+        choice=int(input("Enter 1)STUDENT DB, 2)COURSE DB, 3)BATCH DB, 4)DEPARTMENT DB 5)EXAMINATION 6)BACK! "))
         match choice:
             case 1:
                 studentDb()

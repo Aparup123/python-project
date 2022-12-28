@@ -2,3 +2,4 @@ id,name,marks
 C001,Python Programming,"{'ECE2203': '43', 'ECE2225': '90', 'ME2231': '60', 'CSE2201': '95'}"
 C002,Physics,"{'ECE2203': '70', 'ECE2225': '80', 'ME2231': '90', 'CSE2201': '99'}"
 C003,Chemistry,"{'ECE2203': '70', 'ECE2225': '75', 'ME2231': '80', 'CSE2201': '85'}"
+C005,Mathematics,"{'ECE2203': '80', 'ECE2225': '90', 'ECE2213': '70'}"

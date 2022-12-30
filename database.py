@@ -7,10 +7,11 @@ try:
 except:
     subprocess.run(['pip', 'install', 'matplotlib'])
     import matplotlib.pyplot as plt
-fields=["Student ID", "Name", "Class Roll Number", "Batch Name"]
-c=None
+
 
 def addStudent():
+    fields = ["Student ID", "Name", "Class Roll Number", "Batch Name"]
+    c = None
     with open ("student.csv", "r") as fhand:
         c=fhand.read()
     if c=="":

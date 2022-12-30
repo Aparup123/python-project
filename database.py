@@ -90,7 +90,6 @@ def generateReport():
         stat="PASS"
         if(item!="NA"):
             marks = int(item)
-            print(marks)
             if marks >= 90:
                 grade = "A"
             elif marks >= 80:
@@ -111,9 +110,9 @@ def generateReport():
     with open(sid + ".txt", "a") as fhand:
         fhand.write(f"The overall percentage: {overAllPercentage}%")
 def studentDb():
-    choice=0
-    while(choice!=6):
-        choice=int(input("Enter 1)CREATE A STUDENT, 2)UPDATE STUDENT DETAILS, 3)REMOVE A STUDENT FROM THE DATABASE, 4)GENERATE REPORT CARD OF A STUDENT, 5)VIEW DB 6)BACK! "))
+    choice=1
+    while(choice!=0):
+        choice=int(input("Enter 1)CREATE A STUDENT, 2)UPDATE STUDENT DETAILS, 3)REMOVE A STUDENT FROM THE DATABASE, 4)GENERATE REPORT CARD OF A STUDENT, 5)VIEW DB 0)BACK! "))
         match choice:
             case 1:
                 addStudent()
@@ -161,18 +160,18 @@ def viewPerformance():
         for row in csvReader:
             if(row[0]==courseId):
                 reqDic=eval(row[2])
-        with open("student.csv","r") as fhand:
-            csvReader=csv.reader(fhand)
-            print("--------------------------------------------------------------------------------------------")
-            print("NAME                          ROLL        MARKS")
-            for key,value in reqDic.items():
+        print("--------------------------------------------------------------------------------------------")
+        print("NAME                          ROLL        MARKS")
+        for key,value in reqDic.items():
+            with open("student.csv", "r") as fhand:
+                csvReader = csv.reader(fhand)
                 for row in csvReader:
                     # print(row)
                     # print(key)
                     if(key==row[0]):
                         print(row[1]+" "*(30-len(row[1]))+row[2]+" "*(12-len(row[2]))+value)
                         break
-            print("--------------------------------------------------------------------------------------------")       
+        print("--------------------------------------------------------------------------------------------")
 def histogram():
     courseId=input("Enter the course id: ")
     marksList=[]
@@ -193,9 +192,9 @@ def histogram():
     
 
 def courseDb():
-    choice=0
-    while(choice!=5):
-        choice=int(input("Enter 1)CREATE A COURSE, 2)VIEW PERFORMANCE OF ALL STUDENTS IN A COURSE, 3)COURSE STATISTICS(HISTOGRAM), 4)VIEW 5)BACK! "))
+    choice=1
+    while(choice!=0):
+        choice=int(input("Enter 1)CREATE A COURSE, 2)VIEW PERFORMANCE OF ALL STUDENTS IN A COURSE, 3)COURSE STATISTICS(HISTOGRAM), 4)VIEW 0)BACK! "))
         match choice:
             case 1:
                 addCourse()
@@ -215,29 +214,30 @@ def addBatch():
         with open ("batch.csv", "a") as fhand:
             csvWriter=csv.writer(fhand)
             csvWriter.writerow(batchField)
-    bid=input("Batch ID(e.g:- ECE22): ")
-    bname=input("Batch name(e.g:- ECE 2022-26): ")
-    dname=input("Department name(e.g:- ECE): ")
-    courseLength=int(input("Enter the number of courses in this batch: "))
-    courseList=[input("Enter course ids in this batch(one by one): ") for i in range(courseLength)]
-    studentList=[]
-    with open ("student.csv", "r") as fhand:
-        csvReader=csv.reader(fhand)
-        for row in csvReader:
-            if(row[3]==bid):
-                studentList.append(row[0])
+    else:
+        bid=input("Batch ID(e.g:- ECE22): ")
+        bname=input("Batch name(e.g:- ECE 2022-26): ")
+        dname=input("Department name(e.g:- ECE): ")
+        courseLength=int(input("Enter the number of courses in this batch: "))
+        courseList=[input("Enter course ids in this batch(one by one): ") for i in range(courseLength)]
+        studentList=[]
+        with open ("student.csv", "r") as fhand:
+            csvReader=csv.reader(fhand)
+            for row in csvReader:
+                if(row[3]==bid):
+                    studentList.append(row[0])
     # studentLength=int(input("Enter number of students in the batch: "))
     # studentList=[input("Enter student id: ") for i in range(studentLength)]
-    bdetails=[bid,bname,dname,courseList,studentList]
-    with open ("batch.csv","a") as fhand:
-        csvWriter=csv.writer(fhand)
-        csvWriter.writerow(bdetails)
+        bdetails=[bid,bname,dname,courseList,studentList]
+        with open ("batch.csv","a") as fhand:
+            csvWriter=csv.writer(fhand)
+            csvWriter.writerow(bdetails)
 def viewBatch():
     with open ("batch.csv","r") as fhand:
         csvReader=csv.reader(fhand)
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         for row in csvReader:
-            print(row[0]+" "*(20-len(row[0]))+row[1]+" "*(25-len(row[1]))+str(row[2])+" "*(25-len(row[2]))+str(row[3])+" "*(40-len(str(row[3])))+str(row[4]))
+            print(row[0]+" "*(20-len(row[0]))+row[1]+" "*(25-len(row[1]))+str(row[2])+" "*(25-len(row[2]))+str(row[3])+" "*(45-len(str(row[3])))+str(row[4]))
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
 def viewStudentList():
     batchId=input("Enter batchId: ")
@@ -340,9 +340,9 @@ def pieChart():
     plt.title("PERFORMANCE OF STUDENTS(PIE CHART)")
     plt.show()
 def batchDb():
-    choice=0
-    while(choice!=7):
-        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW COMPLETE PERFORMANCE OF ALL STUDENTS IN A BATCH 5)PIE CHART OF PERCENTAGE OF ALL STUDENTS 6)VIEW DB 7)BACK! "))
+    choice=1
+    while(choice!=0):
+        choice=int(input("Enter 1)CREATE A NEW BATCH, 2)VIEW LIST OF ALL STUDENT IN A BATCH, 3)VIEW LIST OF ALL COURSES TAUGHT IN A BATCH, 4)VIEW COMPLETE PERFORMANCE OF ALL STUDENTS IN A BATCH 5)PIE CHART OF PERCENTAGE OF ALL STUDENTS 6)VIEW DB 0)BACK! "))
         match choice:
             case 1:
                 addBatch()
@@ -496,9 +496,9 @@ def viewDepartment():
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
 
 def departmentDb():
-    choice=0
-    while(choice!=6):
-        choice=int(input("Enter 1)CREATE A NEW DEPARTMENT, 2)VIEW ALL BATCHES IN A DEPARTMENT, 3)VIEW AVERAGE PERFORMANCE OF ALL BATCHES IN A DEPARTMENT, 4)VIEW DEPERTMENT STATISTICS(LINE PLOT) 5)VIEW DB 6)BACK! "))
+    choice=1
+    while(choice!=0):
+        choice=int(input("Enter 1)CREATE A NEW DEPARTMENT, 2)VIEW ALL BATCHES IN A DEPARTMENT, 3)VIEW AVERAGE PERFORMANCE OF ALL BATCHES IN A DEPARTMENT, 4)VIEW DEPERTMENT STATISTICS(LINE PLOT) 5)VIEW DB 0)BACK! "))
         match choice:
             case 1:
                 addDepartment()
@@ -548,9 +548,9 @@ def scatterPlot():
         plt.ylabel("Marks")
         plt.show()
 def examinationDb():
-    choice = 0
-    while (choice != 3):
-        choice = int(input("Enter 1)VIEW THE PERFORMANCE OF ALL STUDENTS IN A EXAMINATION, 2)SCATTER PLOT, 3)BACK! "))
+    choice = 1
+    while (choice != 0):
+        choice = int(input("Enter 1)VIEW THE PERFORMANCE OF ALL STUDENTS IN A EXAMINATION, 2)SCATTER PLOT, 0)BACK! "))
         match choice:
             case 1:
                 addExam()
@@ -558,9 +558,9 @@ def examinationDb():
                 scatterPlot()
 #Database choice
 def choice():
-    choice=0
-    while(choice!=6):
-        choice=int(input("Enter 1)STUDENT DB, 2)COURSE DB, 3)BATCH DB, 4)DEPARTMENT DB 5)EXAMINATION 6)BACK! "))
+    choice=1
+    while(choice!=0):
+        choice=int(input("Enter 1)STUDENT DB, 2)COURSE DB, 3)BATCH DB, 4)DEPARTMENT DB, 5)EXAMINATION, 0)BACK! "))
         match choice:
             case 1:
                 studentDb()
